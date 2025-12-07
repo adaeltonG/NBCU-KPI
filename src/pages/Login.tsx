@@ -156,12 +156,7 @@ export const Login = () => {
           </form>
 
           {/* Demo Credentials Hint */}
-          <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
-            <p className="text-xs text-emerald-700 font-medium mb-1">Demo Mode</p>
-            <p className="text-xs text-emerald-600">
-              Use any email and password to sign in
-            </p>
-          </div>
+       
         </div>
 
         {/* Footer */}

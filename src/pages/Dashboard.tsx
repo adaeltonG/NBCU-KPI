@@ -13,9 +13,8 @@ import { CategoryCard } from '../components/Dashboard/CategoryCard';
 import { ScoreRing } from '../components/Dashboard/ScoreRing';
 import { TrendChart } from '../components/Dashboard/TrendChart';
 import { CategoryBreakdown } from '../components/Dashboard/CategoryBreakdown';
-import { ActionsWidget } from '../components/Dashboard/ActionsWidget';
 import { KPITable } from '../components/Dashboard/KPITable';
-import { categories, kpis, kpiScores, actions, periods, getMonthName } from '../data/mockData';
+import { categories, kpis, kpiScores, periods, getMonthName } from '../data/mockData';
 
 interface LayoutContext {
   selectedPeriod: string;
@@ -284,9 +283,6 @@ export const Dashboard = () => {
         <TrendChart data={trendData} height={280} />
         <CategoryBreakdown categories={categories} scores={categoryScores} height={280} />
       </div>
-
-      {/* Actions Widget */}
-      <ActionsWidget actions={actions} onViewAll={() => navigate('/actions')} />
 
       {/* KPI Table */}
       <div>

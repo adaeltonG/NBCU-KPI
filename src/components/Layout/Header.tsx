@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bell, Search, ChevronDown, Sun, Moon, Filter } from 'lucide-react';
+import { Search, ChevronDown, Filter } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { periods, getMonthName } from '../../data/mockData';
 
@@ -13,7 +13,6 @@ interface HeaderProps {
 export const Header = ({ selectedPeriod, onPeriodChange, scoreMode, onScoreModeChange }: HeaderProps) => {
   const [showPeriodDropdown, setShowPeriodDropdown] = useState(false);
   const [showModeDropdown, setShowModeDropdown] = useState(false);
-  const [isDark, setIsDark] = useState(false);
 
   const currentPeriod = periods.find(p => p.id === selectedPeriod);
 
@@ -84,7 +83,7 @@ export const Header = ({ selectedPeriod, onPeriodChange, scoreMode, onScoreModeC
         <div className="relative">
           <button
             onClick={() => setShowPeriodDropdown(!showPeriodDropdown)}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl text-sm hover:bg-slate-800 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[#400095] text-white rounded-xl text-sm hover:bg-[#4d00b3] transition-colors"
           >
             <span className="font-medium">
               {currentPeriod ? `${getMonthName(currentPeriod.month)} ${currentPeriod.year}` : 'Select Period'}
@@ -98,7 +97,7 @@ export const Header = ({ selectedPeriod, onPeriodChange, scoreMode, onScoreModeC
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute right-0 top-full mt-2 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden max-h-64 overflow-y-auto min-w-[160px] z-50"
+                className="absolute right-0 top-full mt-2 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden max-h-64 overflow-y-auto min-w-[160px] z-50"
               >
                 {periods.map((period) => (
                   <button
@@ -107,13 +106,13 @@ export const Header = ({ selectedPeriod, onPeriodChange, scoreMode, onScoreModeC
                       onPeriodChange(period.id);
                       setShowPeriodDropdown(false);
                     }}
-                    className={`w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-slate-50 transition-colors ${
-                      selectedPeriod === period.id ? 'bg-amber-50 text-amber-600' : 'text-slate-700'
+                    className={`w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-stone-50 transition-colors ${
+                      selectedPeriod === period.id ? 'bg-emerald-50 text-emerald-600' : 'text-stone-700'
                     }`}
                   >
                     <span>{getMonthName(period.month)} {period.year}</span>
                     {period.isClosed && (
-                      <span className="text-xs text-slate-400">Closed</span>
+                      <span className="text-xs text-stone-400">Closed</span>
                     )}
                   </button>
                 ))}
@@ -121,26 +120,6 @@ export const Header = ({ selectedPeriod, onPeriodChange, scoreMode, onScoreModeC
             )}
           </AnimatePresence>
         </div>
-
-        {/* Theme Toggle */}
-        <button
-          onClick={() => setIsDark(!isDark)}
-          className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
-        >
-          {isDark ? (
-            <Sun className="w-5 h-5 text-amber-500" />
-          ) : (
-            <Moon className="w-5 h-5 text-slate-500" />
-          )}
-        </button>
-
-        {/* Notifications */}
-        <button className="relative w-10 h-10 flex items-center justify-center rounded-xl border border-stone-200 hover:bg-stone-50 transition-colors">
-          <Bell className="w-5 h-5 text-stone-500" />
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-orange-500 text-white text-xs font-medium rounded-full flex items-center justify-center">
-            3
-          </span>
-        </button>
       </div>
     </header>
   );

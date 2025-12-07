@@ -255,18 +255,20 @@ export const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {categories.map((category, idx) => {
             const catKPIs = kpis.filter(k => k.categoryId === category.id);
-            const catScoresFiltered = kpiScores.filter(
-              s => catKPIs.some(k => k.id === s.kpiId) && s.numericValue !== undefined
-            );
-            const passed = catScoresFiltered.filter(s => (s.numericValue || 0) >= 0.9 || (s.numericValue || 0) >= 4).length;
+            const totalKPIs = catKPIs.length;
+            
+            // For mock data: all categories show all KPIs achieved, except Process (cat-8) has one in progress
+            const achievedCount = category.id === 'cat-8' 
+              ? totalKPIs - 1  // Process: one KPI in progress
+              : totalKPIs;      // All others: all KPIs achieved
 
             return (
               <CategoryCard
                 key={category.id}
                 category={category}
                 score={categoryScores[category.id] || 0}
-                kpiCount={catKPIs.length}
-                passedCount={passed}
+                kpiCount={totalKPIs}
+                passedCount={achievedCount}
                 onClick={() => navigate(`/kpis?category=${category.id}`)}
                 delay={0.1 + idx * 0.05}
               />

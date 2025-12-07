@@ -1,0 +1,289 @@
+// KPI Report Tool - Database Schema
+// Based on NBCU Monthly Scorecard Excel structure
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      UserRole @default(MANAGER)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  kpiScores     KPIScore[]
+  clientScores  ClientScore[]
+  comments      KPIComment[]
+  evidence      KPIEvidence[]
+  actions       Action[]
+  assignedKPIs  KPI[]         @relation("ResponsiblePerson")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  VIEWER
+  CLIENT
+}
+
+// ============================================
+// KPI STRUCTURE
+// ============================================
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "HSEQ", "Customer/Stakeholder Satisfaction"
+  shortName   String   // e.g., "HSEQ", "Customer"
+  description String?
+  color       String   // Hex color for dashboard visuals
+  icon        String?  // Icon name for UI
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  kpis KPI[]
+}
+
+model ServiceLine {
+  id        String   @id @default(cuid())
+  name      String   @unique // e.g., "Catering", "Security", "Front of House"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  kpis KPI[]
+}
+
+model KPI {
+  id                String     @id @default(cuid())
+  kpiNumber         Int        // 1-23 based on Excel
+  
+  // Core KPI Details
+  desiredOutcome    String     // What we want to achieve
+  objective         String     // The objective (e.g., "1.1 Health and Safety")
+  measurementIntent String     // What we intend to measure
+  definition        String     @db.Text // Full KPI definition
+  output            String     @db.Text // Expected output description
+  dataSource        String     // Where data comes from
+  calculation       String?    @db.Text // How it's calculated
+  
+  // Scoring Configuration
+  frequency         Frequency  @default(MONTHLY)
+  weighting         Float      @default(1.0) // Weight in overall score
+  failThreshold     String     // e.g., "<99%", ">2"
+  achieveThreshold  String     // e.g., ">100%", "<2"
+  scoringComment    String?    // Additional scoring criteria notes
+  
+  // Status
+  isActive          Boolean    @default(true)
+  sortOrder         Int        @default(0)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  // Relations
+  categoryId         String
+  category           Category     @relation(fields: [categoryId], references: [id])
+  serviceLineId      String?
+  serviceLine        ServiceLine? @relation(fields: [serviceLineId], references: [id])
+  responsiblePersonId String?
+  responsiblePerson  User?        @relation("ResponsiblePerson", fields: [responsiblePersonId], references: [id])
+  
+  scores       KPIScore[]
+  clientScores ClientScore[]
+  comments     KPIComment[]
+  evidence     KPIEvidence[]
+}
+
+enum Frequency {
+  MONTHLY
+  QUARTERLY
+  ANNUAL
+}
+
+// ============================================
+// SCORES & MEASUREMENTS
+// ============================================
+
+model Period {
+  id        String   @id @default(cuid())
+  year      Int      // e.g., 2025
+  month     Int      // 1-12
+  quarter   Int      // 1-4
+  startDate DateTime
+  endDate   DateTime
+  isClosed  Boolean  @default(false) // Lock period for editing
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  kpiScores    KPIScore[]
+  clientScores ClientScore[]
+  comments     KPIComment[]
+  evidence     KPIEvidence[]
+
+  @@unique([year, month])
+}
+
+model KPIScore {
+  id              String      @id @default(cuid())
+  
+  // Score Data
+  actualValue     String?     // The actual measured value (e.g., "0.99", "4.87")
+  numericValue    Float?      // Parsed numeric value for calculations
+  score           Float?      // Calculated score (0-1 scale)
+  status          ScoreStatus @default(PENDING)
+  
+  // Week-by-week if applicable (for quarterly breakdown)
+  week1Value      String?
+  week2Value      String?
+  week3Value      String?
+  week4Value      String?
+  
+  // Metadata
+  notes           String?     @db.Text
+  submittedAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relations
+  kpiId      String
+  kpi        KPI      @relation(fields: [kpiId], references: [id], onDelete: Cascade)
+  periodId   String
+  period     Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  submittedById String?
+  submittedBy   User?    @relation(fields: [submittedById], references: [id])
+
+  @@unique([kpiId, periodId])
+}
+
+enum ScoreStatus {
+  PENDING
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+// ============================================
+// CLIENT SCORING
+// ============================================
+
+model ClientScore {
+  id            String   @id @default(cuid())
+  
+  // Client's score
+  score         Float    // Client's score for this KPI (1-5 or percentage)
+  justification String?  @db.Text // Client's comments to justify score
+  
+  // Metadata
+  scoredAt      DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  kpiId    String
+  kpi      KPI    @relation(fields: [kpiId], references: [id], onDelete: Cascade)
+  periodId String
+  period   Period @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  scoredById String?
+  scoredBy   User?  @relation(fields: [scoredById], references: [id])
+
+  @@unique([kpiId, periodId])
+}
+
+// ============================================
+// COMMENTS & EVIDENCE
+// ============================================
+
+model KPIComment {
+  id        String      @id @default(cuid())
+  content   String      @db.Text
+  type      CommentType @default(GENERAL)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relations
+  kpiId    String
+  kpi      KPI    @relation(fields: [kpiId], references: [id], onDelete: Cascade)
+  periodId String
+  period   Period @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+}
+
+enum CommentType {
+  GENERAL
+  ACHIEVEMENT
+  ISSUE
+  ACTION_REQUIRED
+}
+
+model KPIEvidence {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  fileUrl     String?      // URL to uploaded file
+  fileName    String?
+  fileType    String?
+  fileSize    Int?
+  type        EvidenceType @default(DOCUMENT)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  kpiId      String
+  kpi        KPI    @relation(fields: [kpiId], references: [id], onDelete: Cascade)
+  periodId   String
+  period     Period @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+}
+
+enum EvidenceType {
+  DOCUMENT
+  IMAGE
+  REPORT
+  LINK
+  OTHER
+}
+
+// ============================================
+// ACTIONS TRACKING
+// ============================================
+
+model Action {
+  id             String       @id @default(cuid())
+  actionNumber   Int
+  description    String       @db.Text
+  requiredAction String       @db.Text
+  raisedBy       String       // Initials or name
+  dueDate        DateTime?
+  completedDate  DateTime?
+  status         ActionStatus @default(OPEN)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Relations
+  responsibleId String?
+  responsible   User?  @relation(fields: [responsibleId], references: [id])
+}
+
+enum ActionStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  OVERDUE
+  CANCELLED
+}

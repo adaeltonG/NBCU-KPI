@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Target, Mail, Lock, LogIn } from 'lucide-react';
+import { Mail, Lock, LogIn } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export const Login = () => {
@@ -53,14 +53,6 @@ export const Login = () => {
         <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
           {/* Logo & Header */}
           <div className="text-center mb-8">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring' }}
-              className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center mx-auto mb-4"
-            >
-              <Target className="w-8 h-8 text-slate-900" />
-            </motion.div>
             <h1 className="text-3xl font-bold text-stone-800 mb-2">KPI Report</h1>
             <p className="text-stone-500">NBCU Scorecard Portal</p>
           </div>

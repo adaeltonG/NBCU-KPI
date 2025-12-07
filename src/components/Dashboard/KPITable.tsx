@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ChevronRight, CheckCircle2, XCircle, Clock, AlertCircle } from 'lucide-react';
+import { ChevronRight, CheckCircle2, TrendingUp, Clock, Sparkles } from 'lucide-react';
 import { KPI, KPIScore, Category } from '../../types';
 import { getMonthName } from '../../data/mockData';
 
@@ -10,24 +10,25 @@ interface KPITableProps {
   onKPIClick?: (kpi: KPI) => void;
 }
 
-const StatusIcon = ({ status }: { status: 'PASS' | 'FAIL' | 'PENDING' | 'WARNING' }) => {
+// Positive status indicators
+const StatusIcon = ({ status }: { status: 'ACHIEVED' | 'PROGRESSING' | 'PENDING' | 'DEVELOPING' }) => {
   switch (status) {
-    case 'PASS':
+    case 'ACHIEVED':
       return <CheckCircle2 className="w-5 h-5 text-emerald-600" />;
-    case 'FAIL':
-      return <XCircle className="w-5 h-5 text-red-600" />;
-    case 'WARNING':
-      return <AlertCircle className="w-5 h-5 text-orange-500" />;
+    case 'PROGRESSING':
+      return <TrendingUp className="w-5 h-5 text-amber-500" />;
+    case 'DEVELOPING':
+      return <Sparkles className="w-5 h-5 text-teal-500" />;
     default:
       return <Clock className="w-5 h-5 text-stone-400" />;
   }
 };
 
-const getStatus = (score: number | undefined): 'PASS' | 'FAIL' | 'PENDING' | 'WARNING' => {
+const getStatus = (score: number | undefined): 'ACHIEVED' | 'PROGRESSING' | 'PENDING' | 'DEVELOPING' => {
   if (score === undefined || score === null) return 'PENDING';
-  if (score >= 0.95 || score >= 4.5) return 'PASS';
-  if (score >= 0.85 || score >= 4) return 'WARNING';
-  return 'FAIL';
+  if (score >= 0.95 || score >= 4.5) return 'ACHIEVED';
+  if (score >= 0.85 || score >= 4) return 'DEVELOPING';
+  return 'PROGRESSING';
 };
 
 export const KPITable = ({ kpis, scores, categories, onKPIClick }: KPITableProps) => {
@@ -119,9 +120,9 @@ export const KPITable = ({ kpis, scores, categories, onKPIClick }: KPITableProps
                       <td key={month} className="px-3 py-3 text-center">
                         {displayValue !== undefined ? (
                           <span className={`inline-flex items-center justify-center min-w-[48px] px-2 py-1 rounded-lg text-xs font-medium ${
-                            cellStatus === 'PASS' ? 'bg-emerald-100 text-emerald-700' :
-                            cellStatus === 'WARNING' ? 'bg-orange-100 text-orange-700' :
-                            cellStatus === 'FAIL' ? 'bg-red-100 text-red-700' :
+                            cellStatus === 'ACHIEVED' ? 'bg-emerald-100 text-emerald-700' :
+                            cellStatus === 'DEVELOPING' ? 'bg-teal-100 text-teal-700' :
+                            cellStatus === 'PROGRESSING' ? 'bg-amber-100 text-amber-700' :
                             'bg-stone-100 text-stone-500'
                           }`}>
                             {numValue !== undefined && numValue <= 5 

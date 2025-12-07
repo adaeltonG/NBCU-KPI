@@ -34,10 +34,13 @@ export const ScoreRing = ({
 
   const getColor = () => {
     if (color) return color;
-    if (percentage >= 90) return '#10b981'; // green
-    if (percentage >= 70) return '#f59e0b'; // amber
-    if (percentage >= 50) return '#f97316'; // orange
-    return '#ef4444'; // red
+    // Gradient of greens - darker/more saturated = better performance
+    if (percentage >= 90) return '#059669'; // emerald-600 - Excellent
+    if (percentage >= 80) return '#10b981'; // emerald-500 - Great
+    if (percentage >= 70) return '#34d399'; // emerald-400 - Good
+    if (percentage >= 60) return '#6ee7b7'; // emerald-300 - Fair
+    if (percentage >= 50) return '#a7f3d0'; // emerald-200 - Developing
+    return '#f59e0b'; // amber-500 - Needs attention (no red)
   };
 
   return (

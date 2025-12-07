@@ -7,7 +7,7 @@ import {
   Download,
   ChevronDown,
   CheckCircle2,
-  XCircle,
+  TrendingUp,
   Clock,
   AlertCircle,
 } from 'lucide-react';
@@ -27,7 +27,7 @@ export const KPIScorecard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
   const [selectedServiceLine, setSelectedServiceLine] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState<'all' | 'pass' | 'fail' | 'pending'>('all');
+  const [selectedStatus, setSelectedStatus] = useState<'all' | 'pass' | 'improving' | 'pending'>('all');
   const [showFilters, setShowFilters] = useState(false);
 
   const currentPeriod = periods.find(p => p.id === selectedPeriod);
@@ -62,7 +62,7 @@ export const KPIScorecard = () => {
         
         if (selectedStatus === 'pending' && val !== undefined) return false;
         if (selectedStatus === 'pass' && (val === undefined || (val < 0.9 && val < 4))) return false;
-        if (selectedStatus === 'fail' && (val === undefined || val >= 0.9 || val >= 4)) return false;
+        if (selectedStatus === 'improving' && (val === undefined || val >= 0.9 || val >= 4)) return false;
       }
 
       return true;
@@ -144,18 +144,18 @@ export const KPIScorecard = () => {
           <p className="text-sm text-slate-500">Passed</p>
         </button>
         <button
-          onClick={() => setSelectedStatus('fail')}
+          onClick={() => setSelectedStatus('improving')}
           className={`p-4 rounded-xl border transition-all ${
-            selectedStatus === 'fail'
-              ? 'border-red-500 bg-red-50'
-              : 'border-slate-200 bg-white hover:border-slate-300'
+            selectedStatus === 'improving'
+              ? 'border-amber-500 bg-amber-50'
+              : 'border-stone-200 bg-white hover:border-stone-300'
           }`}
         >
           <div className="flex items-center gap-2">
-            <XCircle className="w-5 h-5 text-red-500" />
-            <p className="text-2xl font-bold text-red-600">{stats.failed}</p>
+            <TrendingUp className="w-5 h-5 text-amber-500" />
+            <p className="text-2xl font-bold text-amber-600">{stats.failed}</p>
           </div>
-          <p className="text-sm text-slate-500">Below Target</p>
+          <p className="text-sm text-stone-500">In Progress</p>
         </button>
         <button
           onClick={() => setSelectedStatus('pending')}

@@ -6,7 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   CheckCircle2,
-  XCircle,
+  Target,
   Clock,
   TrendingUp,
   TrendingDown,
@@ -141,7 +141,7 @@ export const MonthlyView = () => {
 
   const TrendIcon = ({ trend }: { trend: 'up' | 'down' | 'same' | 'new' }) => {
     if (trend === 'up') return <TrendingUp className="w-4 h-4 text-emerald-500" />;
-    if (trend === 'down') return <TrendingDown className="w-4 h-4 text-red-500" />;
+    if (trend === 'down') return <TrendingDown className="w-4 h-4 text-amber-500" />;
     if (trend === 'same') return <Minus className="w-4 h-4 text-stone-400" />;
     return <span className="text-xs text-stone-400">New</span>;
   };
@@ -199,7 +199,7 @@ export const MonthlyView = () => {
               <p className="text-4xl font-bold">{monthlyStats.avgScore.toFixed(0)}%</p>
               {monthlyStats.trend !== 0 && (
                 <div className={`flex items-center gap-1 mt-2 ${
-                  monthlyStats.trend > 0 ? 'text-teal-300' : 'text-red-400'
+                  monthlyStats.trend > 0 ? 'text-teal-300' : 'text-amber-400'
                 }`}>
                   {monthlyStats.trend > 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                   <span className="text-sm">{monthlyStats.trend > 0 ? '+' : ''}{monthlyStats.trend.toFixed(1)}%</span>
@@ -220,10 +220,10 @@ export const MonthlyView = () => {
 
         <div className="bg-white rounded-2xl border border-stone-200 p-6">
           <div className="flex items-center gap-3 mb-2">
-            <XCircle className="w-5 h-5 text-red-500" />
-            <span className="text-sm text-stone-500">Failed</span>
+            <Target className="w-5 h-5 text-amber-500" />
+            <span className="text-sm text-stone-500">In Progress</span>
           </div>
-          <p className="text-3xl font-bold text-red-600">{monthlyStats.failed}</p>
+          <p className="text-3xl font-bold text-amber-600">{monthlyStats.failed}</p>
         </div>
 
         <div className="bg-white rounded-2xl border border-stone-200 p-6">
@@ -254,8 +254,8 @@ export const MonthlyView = () => {
                 <span className="font-medium text-stone-700">{stat.category.shortName}</span>
                 <span className={`text-xs font-medium px-2 py-1 rounded-full ${
                   stat.avgScore >= 90 ? 'bg-emerald-100 text-emerald-700' :
-                  stat.avgScore >= 70 ? 'bg-orange-100 text-orange-700' :
-                  stat.avgScore > 0 ? 'bg-red-100 text-red-700' :
+                  stat.avgScore >= 70 ? 'bg-teal-100 text-teal-700' :
+                  stat.avgScore > 0 ? 'bg-amber-100 text-amber-700' :
                   'bg-stone-100 text-stone-500'
                 }`}>
                   {stat.avgScore.toFixed(0)}%
@@ -263,7 +263,7 @@ export const MonthlyView = () => {
               </div>
               <div className="flex items-center gap-3 text-xs text-stone-500">
                 <span className="text-emerald-500">{stat.passed} pass</span>
-                <span className="text-red-500">{stat.failed} fail</span>
+                <span className="text-amber-500">{stat.failed} in progress</span>
                 <span>{stat.kpiCount - stat.scored} pending</span>
               </div>
               <div className="mt-2 h-1.5 bg-stone-100 rounded-full overflow-hidden">
@@ -312,7 +312,7 @@ export const MonthlyView = () => {
                 {item.actualValue ? (
                   <span className={`px-3 py-1 rounded-lg text-sm font-medium ${
                     item.status === 'pass' ? 'bg-emerald-100 text-emerald-700' :
-                    item.status === 'fail' ? 'bg-red-100 text-red-700' :
+                    item.status === 'fail' ? 'bg-amber-100 text-amber-700' :
                     'bg-stone-100 text-stone-500'
                   }`}>
                     {item.score !== undefined && item.score <= 1 
@@ -325,7 +325,7 @@ export const MonthlyView = () => {
                   </span>
                 )}
                 {item.status === 'pass' && <CheckCircle2 className="w-5 h-5 text-emerald-500" />}
-                {item.status === 'fail' && <XCircle className="w-5 h-5 text-red-500" />}
+                {item.status === 'fail' && <Target className="w-5 h-5 text-amber-500" />}
                 {item.status === 'pending' && <Clock className="w-5 h-5 text-stone-300" />}
                 <ChevronRight className="w-4 h-4 text-stone-300" />
               </div>

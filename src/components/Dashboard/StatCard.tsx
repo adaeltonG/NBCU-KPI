@@ -24,8 +24,8 @@ export const StatCard = ({
   delay = 0,
 }: StatCardProps) => {
   const TrendIcon = trend === undefined || trend === 0 ? Minus : trend > 0 ? TrendingUp : TrendingDown;
-  const trendColor = trend === undefined || trend === 0 ? 'text-stone-400' : trend > 0 ? 'text-emerald-600' : 'text-red-600';
-  const trendBg = trend === undefined || trend === 0 ? 'bg-stone-50' : trend > 0 ? 'bg-emerald-50' : 'bg-red-50';
+  const trendColor = trend === undefined || trend === 0 ? 'text-stone-400' : trend > 0 ? 'text-emerald-600' : 'text-amber-600';
+  const trendBg = trend === undefined || trend === 0 ? 'bg-stone-50' : trend > 0 ? 'bg-emerald-50' : 'bg-amber-50';
 
   return (
     <motion.div

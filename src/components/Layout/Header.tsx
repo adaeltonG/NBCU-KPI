@@ -135,9 +135,9 @@ export const Header = ({ selectedPeriod, onPeriodChange, scoreMode, onScoreModeC
         </button>
 
         {/* Notifications */}
-        <button className="relative w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
-          <Bell className="w-5 h-5 text-slate-500" />
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-medium rounded-full flex items-center justify-center">
+        <button className="relative w-10 h-10 flex items-center justify-center rounded-xl border border-stone-200 hover:bg-stone-50 transition-colors">
+          <Bell className="w-5 h-5 text-stone-500" />
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-orange-500 text-white text-xs font-medium rounded-full flex items-center justify-center">
             3
           </span>
         </button>

@@ -193,8 +193,8 @@ export const ScoreEntry = () => {
                     <p className="text-sm font-medium text-slate-700">{selectedKPI.dataSource}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Fail Threshold</p>
-                    <p className="text-sm font-medium text-red-600">{selectedKPI.failThreshold}</p>
+                    <p className="text-xs text-stone-400 uppercase tracking-wider mb-1">Minimum Threshold</p>
+                    <p className="text-sm font-medium text-amber-600">{selectedKPI.failThreshold}</p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Achieve Threshold</p>

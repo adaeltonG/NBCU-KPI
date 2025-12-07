@@ -13,7 +13,7 @@ const StatusBadge = ({ status }: { status: Action['status'] }) => {
     OPEN: { icon: AlertCircle, color: 'text-blue-600', bg: 'bg-blue-50', label: 'Open' },
     IN_PROGRESS: { icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50', label: 'In Progress' },
     COMPLETED: { icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50', label: 'Completed' },
-    OVERDUE: { icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-50', label: 'Overdue' },
+    OVERDUE: { icon: AlertCircle, color: 'text-amber-600', bg: 'bg-amber-50', label: 'Priority' },
     CANCELLED: { icon: AlertCircle, color: 'text-stone-400', bg: 'bg-stone-50', label: 'Cancelled' },
   };
   
@@ -67,7 +67,7 @@ export const ActionsWidget = ({ actions, onViewAll }: ActionsWidgetProps) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: idx * 0.1 }}
               className={`p-3 rounded-xl border transition-colors hover:bg-stone-50 ${
-                isOverdue ? 'border-red-200 bg-red-50/50' : 'border-stone-100'
+                isOverdue ? 'border-amber-200 bg-amber-50/50' : 'border-stone-100'
               }`}
             >
               <div className="flex items-start justify-between gap-3">
@@ -87,7 +87,7 @@ export const ActionsWidget = ({ actions, onViewAll }: ActionsWidgetProps) => {
                   Raised by: <span className="font-medium text-stone-600">{action.raisedBy}</span>
                 </span>
                 {action.dueDate && (
-                  <span className={isOverdue ? 'text-red-600 font-medium' : 'text-stone-400'}>
+                  <span className={isOverdue ? 'text-amber-600 font-medium' : 'text-stone-400'}>
                     Due: {format(parseISO(action.dueDate), 'MMM d, yyyy')}
                   </span>
                 )}

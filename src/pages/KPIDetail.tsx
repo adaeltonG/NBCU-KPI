@@ -59,9 +59,9 @@ export const KPIDetail = () => {
   const getStatus = () => {
     if (!latestScore?.numericValue) return 'PENDING';
     const val = latestScore.numericValue;
-    if (val >= 0.95 || val >= 4.5) return 'PASS';
-    if (val >= 0.85 || val >= 4) return 'WARNING';
-    return 'FAIL';
+    if (val >= 0.95 || val >= 4.5) return 'ACHIEVED';
+    if (val >= 0.85 || val >= 4) return 'DEVELOPING';
+    return 'IMPROVING';
   };
 
   const status = getStatus();
@@ -120,14 +120,14 @@ export const KPIDetail = () => {
                 </span>
                 <span className="text-sm text-slate-400">KPI #{kpi.kpiNumber}</span>
                 <span className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${
-                  status === 'PASS' ? 'bg-emerald-100 text-emerald-700' :
-                  status === 'WARNING' ? 'bg-amber-100 text-amber-700' :
-                  status === 'FAIL' ? 'bg-red-100 text-red-700' :
-                  'bg-slate-100 text-slate-500'
+                  status === 'ACHIEVED' ? 'bg-emerald-100 text-emerald-700' :
+                  status === 'DEVELOPING' ? 'bg-teal-100 text-teal-700' :
+                  status === 'IMPROVING' ? 'bg-amber-100 text-amber-700' :
+                  'bg-stone-100 text-stone-500'
                 }`}>
-                  {status === 'PASS' && <CheckCircle2 className="w-3 h-3" />}
-                  {status === 'FAIL' && <XCircle className="w-3 h-3" />}
-                  {status === 'WARNING' && <AlertCircle className="w-3 h-3" />}
+                  {status === 'ACHIEVED' && <CheckCircle2 className="w-3 h-3" />}
+                  {status === 'IMPROVING' && <TrendingUp className="w-3 h-3" />}
+                  {status === 'DEVELOPING' && <AlertCircle className="w-3 h-3" />}
                   {status === 'PENDING' && <Clock className="w-3 h-3" />}
                   {status}
                 </span>
@@ -249,35 +249,35 @@ export const KPIDetail = () => {
                     {periods.slice(0, 8).map(period => {
                       const score = scores.find(s => s.periodId === period.id);
                       const val = score?.numericValue;
-                      const cellStatus = !val ? 'PENDING' : val >= 0.9 || val >= 4 ? 'PASS' : 'FAIL';
+                      const cellStatus = !val ? 'PENDING' : val >= 0.9 || val >= 4 ? 'ACHIEVED' : 'IMPROVING';
 
                       return (
-                        <tr key={period.id} className="border-b border-slate-100 hover:bg-slate-50">
+                        <tr key={period.id} className="border-b border-stone-100 hover:bg-stone-50">
                           <td className="py-3 px-4">
-                            <span className="text-sm font-medium text-slate-700">
+                            <span className="text-sm font-medium text-stone-700">
                               {getMonthName(period.month)} {period.year}
                             </span>
                           </td>
                           <td className="py-3 px-4 text-center">
                             {val !== undefined ? (
                               <span className={`inline-block px-3 py-1 rounded-lg text-sm font-medium ${
-                                cellStatus === 'PASS' ? 'bg-emerald-100 text-emerald-700' :
-                                cellStatus === 'FAIL' ? 'bg-red-100 text-red-700' :
-                                'bg-slate-100 text-slate-500'
+                                cellStatus === 'ACHIEVED' ? 'bg-emerald-100 text-emerald-700' :
+                                cellStatus === 'IMPROVING' ? 'bg-amber-100 text-amber-700' :
+                                'bg-stone-100 text-stone-500'
                               }`}>
                                 {val <= 1 ? `${(val * 100).toFixed(0)}%` : val.toFixed(2)}
                               </span>
                             ) : (
-                              <span className="text-slate-300">—</span>
+                              <span className="text-stone-300">—</span>
                             )}
                           </td>
                           <td className="py-3 px-4 text-center">
-                            {cellStatus === 'PASS' && <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />}
-                            {cellStatus === 'FAIL' && <XCircle className="w-5 h-5 text-red-500 mx-auto" />}
-                            {cellStatus === 'PENDING' && <Clock className="w-5 h-5 text-slate-300 mx-auto" />}
+                            {cellStatus === 'ACHIEVED' && <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />}
+                            {cellStatus === 'IMPROVING' && <TrendingUp className="w-5 h-5 text-amber-500 mx-auto" />}
+                            {cellStatus === 'PENDING' && <Clock className="w-5 h-5 text-stone-300 mx-auto" />}
                           </td>
                           <td className="py-3 px-4">
-                            <span className="text-sm text-slate-500">{score?.notes || '—'}</span>
+                            <span className="text-sm text-stone-500">{score?.notes || '—'}</span>
                           </td>
                         </tr>
                       );

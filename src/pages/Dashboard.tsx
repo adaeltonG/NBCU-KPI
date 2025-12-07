@@ -4,10 +4,8 @@ import { motion } from 'framer-motion';
 import {
   Target,
   CheckCircle2,
-  XCircle,
   Clock,
   TrendingUp,
-  Users,
   Calendar,
 } from 'lucide-react';
 import { StatCard } from '../components/Dashboard/StatCard';
@@ -26,7 +24,7 @@ interface LayoutContext {
 
 export const Dashboard = () => {
   const navigate = useNavigate();
-  const { selectedPeriod, scoreMode } = useOutletContext<LayoutContext>();
+  const { selectedPeriod, scoreMode: _scoreMode } = useOutletContext<LayoutContext>();
   
   const currentPeriod = periods.find(p => p.id === selectedPeriod);
 
@@ -179,11 +177,11 @@ export const Dashboard = () => {
                 <p className="text-sm text-emerald-300">Passed</p>
               </div>
               <div className="text-center lg:text-left">
-                <div className="flex items-center justify-center lg:justify-start gap-2 text-red-400 mb-1">
-                  <XCircle className="w-5 h-5" />
+                <div className="flex items-center justify-center lg:justify-start gap-2 text-amber-400 mb-1">
+                  <Target className="w-5 h-5" />
                   <span className="text-2xl font-bold">{stats.failed}</span>
                 </div>
-                <p className="text-sm text-emerald-300">Failed</p>
+                <p className="text-sm text-emerald-300">In Progress</p>
               </div>
               <div className="text-center lg:text-left">
                 <div className="flex items-center justify-center lg:justify-start gap-2 text-emerald-300 mb-1">
@@ -236,13 +234,13 @@ export const Dashboard = () => {
           delay={0.15}
         />
         <StatCard
-          title="Below Target"
+          title="In Progress"
           value={stats.failed}
-          subtitle="Requires attention"
-          icon={XCircle}
-          trend={-2}
+          subtitle="Improving"
+          icon={TrendingUp}
+          trend={2}
           trendLabel="vs last month"
-          color="#dc2626"
+          color="#f59e0b"
           delay={0.2}
         />
         <StatCard

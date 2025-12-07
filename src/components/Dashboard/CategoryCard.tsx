@@ -62,14 +62,15 @@ export const CategoryCard = ({
             <span className="text-2xl font-bold text-stone-800">{Math.round(score)}%</span>
             <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
               score >= 90 ? 'bg-emerald-100 text-emerald-700' :
-              score >= 70 ? 'bg-orange-100 text-orange-700' :
-              'bg-red-100 text-red-700'
+              score >= 70 ? 'bg-teal-100 text-teal-700' :
+              score >= 50 ? 'bg-amber-100 text-amber-700' :
+              'bg-orange-100 text-orange-700'
             }`}>
-              {score >= 90 ? 'Achieved' : score >= 70 ? 'Partial' : 'At Risk'}
+              {score >= 90 ? 'Excellent' : score >= 70 ? 'Good' : score >= 50 ? 'Developing' : 'Building'}
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-xs text-emerald-600 font-medium">{passedCount} passed</span>
+            <span className="text-xs text-emerald-600 font-medium">{passedCount} achieved</span>
             <span className="text-xs text-stone-300">/</span>
             <span className="text-xs text-stone-400">{kpiCount} total</span>
           </div>

@@ -21,16 +21,16 @@
   --color-success: #059669;
   --color-success-light: #10b981;
   --color-warning: #d97706;
-  --color-danger: #dc2626;
-  --color-danger-light: #ef4444;
+  --color-attention: #f59e0b;
+  --color-attention-light: #fbbf24;
   --color-info: #0284c7;
   
-  /* Score Colors - Richer, more vibrant */
-  --score-excellent: #059669;
-  --score-good: #16a34a;
-  --score-average: #d97706;
-  --score-poor: #ea580c;
-  --score-fail: #dc2626;
+  /* Score Colors - Positive gradient of greens */
+  --score-excellent: #059669;  /* 90%+ */
+  --score-great: #10b981;      /* 80%+ */
+  --score-good: #34d399;       /* 70%+ */
+  --score-developing: #6ee7b7; /* 60%+ */
+  --score-building: #f59e0b;   /* Below 60% - amber, not red */
   
   /* Category Colors - More saturated & distinctive */
   --cat-hseq: #7c3aed;
@@ -147,10 +147,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .score-excellent { background: var(--score-excellent); color: white; }
+.score-great { background: var(--score-great); color: white; }
 .score-good { background: var(--score-good); color: white; }
-.score-average { background: var(--score-average); color: white; }
-.score-poor { background: var(--score-poor); color: white; }
-.score-fail { background: var(--score-fail); color: white; }
+.score-developing { background: var(--score-developing); color: #1c1917; }
+.score-building { background: var(--score-building); color: #1c1917; }
 
 /* Progress Ring Animation */
 @keyframes progress-ring {
@@ -391,9 +391,9 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block;
 }
 
-.score-dot.pass { background: var(--score-excellent); }
-.score-dot.warning { background: var(--score-average); }
-.score-dot.fail { background: var(--score-fail); }
+.score-dot.achieved { background: var(--score-excellent); }
+.score-dot.developing { background: var(--score-good); }
+.score-dot.improving { background: var(--score-building); }
 
 /* Responsive Utilities */
 @media (max-width: 768px) {

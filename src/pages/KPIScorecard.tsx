@@ -2,10 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams, useOutletContext } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Filter,
-  Search,
   Download,
-  ChevronDown,
   CheckCircle2,
   TrendingUp,
   Clock,
@@ -24,27 +21,15 @@ export const KPIScorecard = () => {
   const [searchParams] = useSearchParams();
   const { selectedPeriod, scoreMode } = useOutletContext<LayoutContext>();
   
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
   const [selectedServiceLine, setSelectedServiceLine] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'pass' | 'improving' | 'pending'>('all');
-  const [showFilters, setShowFilters] = useState(false);
 
   const currentPeriod = periods.find(p => p.id === selectedPeriod);
 
   // Filter KPIs
   const filteredKPIs = useMemo(() => {
     return kpis.filter(kpi => {
-      // Search filter
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        const matchesSearch = 
-          kpi.objective.toLowerCase().includes(query) ||
-          kpi.definition.toLowerCase().includes(query) ||
-          kpi.kpiNumber.toString().includes(query);
-        if (!matchesSearch) return false;
-      }
-
       // Category filter
       if (selectedCategory !== 'all' && kpi.categoryId !== selectedCategory) {
         return false;
@@ -55,21 +40,21 @@ export const KPIScorecard = () => {
         return false;
       }
 
-      // Status filter
+      // Status filter (unified 100% scale: 90%+ is achieved)
       if (selectedStatus !== 'all') {
         const score = kpiScores.find(s => s.kpiId === kpi.id && s.periodId === selectedPeriod);
         const val = score?.numericValue;
         
         if (selectedStatus === 'pending' && val !== undefined) return false;
-        if (selectedStatus === 'pass' && (val === undefined || (val < 0.9 && val < 4))) return false;
-        if (selectedStatus === 'improving' && (val === undefined || val >= 0.9 || val >= 4)) return false;
+        if (selectedStatus === 'pass' && (val === undefined || val < 90)) return false;
+        if (selectedStatus === 'improving' && (val === undefined || val >= 90)) return false;
       }
 
       return true;
     });
-  }, [searchQuery, selectedCategory, selectedServiceLine, selectedStatus, selectedPeriod]);
+  }, [selectedCategory, selectedServiceLine, selectedStatus, selectedPeriod]);
 
-  // Calculate summary stats
+  // Calculate summary stats (unified 100% scale: 90%+ is achieved)
   const stats = useMemo(() => {
     let passed = 0, failed = 0, pending = 0;
     
@@ -79,7 +64,7 @@ export const KPIScorecard = () => {
       
       if (val === undefined) {
         pending++;
-      } else if (val >= 0.9 || val >= 4) {
+      } else if (val >= 90) {
         passed++;
       } else {
         failed++;
@@ -178,26 +163,14 @@ export const KPIScorecard = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-white rounded-2xl border border-slate-200 p-4"
+        className="bg-white rounded-2xl border border-stone-200 p-4"
       >
         <div className="flex flex-col md:flex-row gap-4">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search KPIs by name, number, or description..."
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
-            />
-          </div>
-
           {/* Category Filter */}
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 min-w-[180px]"
+            className="px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 min-w-[180px]"
           >
             <option value="all">All Categories</option>
             {categories.map(cat => (
@@ -209,7 +182,7 @@ export const KPIScorecard = () => {
           <select
             value={selectedServiceLine}
             onChange={(e) => setSelectedServiceLine(e.target.value)}
-            className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 min-w-[180px]"
+            className="px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 min-w-[180px]"
           >
             <option value="all">All Service Lines</option>
             {serviceLines.map(sl => (
@@ -218,15 +191,14 @@ export const KPIScorecard = () => {
           </select>
 
           {/* Clear Filters */}
-          {(searchQuery || selectedCategory !== 'all' || selectedServiceLine !== 'all' || selectedStatus !== 'all') && (
+          {(selectedCategory !== 'all' || selectedServiceLine !== 'all' || selectedStatus !== 'all') && (
             <button
               onClick={() => {
-                setSearchQuery('');
                 setSelectedCategory('all');
                 setSelectedServiceLine('all');
                 setSelectedStatus('all');
               }}
-              className="px-4 py-2.5 text-sm text-amber-600 hover:text-amber-700 font-medium"
+              className="px-4 py-2.5 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
             >
               Clear Filters
             </button>
@@ -251,9 +223,9 @@ export const KPIScorecard = () => {
       {/* Empty State */}
       {filteredKPIs.length === 0 && (
         <div className="text-center py-12">
-          <AlertCircle className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <p className="text-xl text-slate-500 mb-2">No KPIs found</p>
-          <p className="text-slate-400">Try adjusting your filters or search query</p>
+          <AlertCircle className="w-16 h-16 text-stone-300 mx-auto mb-4" />
+          <p className="text-xl text-stone-500 mb-2">No KPIs found</p>
+          <p className="text-stone-400">Try adjusting your filters</p>
         </div>
       )}
     </div>

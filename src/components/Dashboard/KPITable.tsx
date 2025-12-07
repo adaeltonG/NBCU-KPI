@@ -55,11 +55,11 @@ export const KPITable = ({ kpis, scores, categories, onKPIClick }: KPITableProps
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-indigo-950 text-white">
-              <th className="sticky left-0 bg-indigo-950 z-10 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider w-12">
+            <tr className="bg-[#400095] text-white">
+              <th className="sticky left-0 bg-[#400095] z-10 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider w-12">
                 #
               </th>
-              <th className="sticky left-12 bg-indigo-950 z-10 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider min-w-[200px]">
+              <th className="sticky left-12 bg-[#400095] z-10 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider min-w-[200px]">
                 KPI
               </th>
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider w-24">
@@ -70,7 +70,7 @@ export const KPITable = ({ kpis, scores, categories, onKPIClick }: KPITableProps
                   {getMonthName(month)}
                 </th>
               ))}
-              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider bg-orange-500 text-stone-900 w-20">
+              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider bg-emerald-600 text-white w-20">
                 YTD
               </th>
               <th className="px-4 py-3 w-10"></th>
@@ -133,9 +133,9 @@ export const KPITable = ({ kpis, scores, categories, onKPIClick }: KPITableProps
                       </td>
                     );
                   })}
-                  <td className="px-4 py-3 text-center bg-orange-50">
+                  <td className="px-4 py-3 text-center bg-emerald-50">
                     {ytd.count > 0 ? (
-                      <span className="inline-flex items-center justify-center min-w-[48px] px-2 py-1 rounded-lg text-xs font-bold bg-orange-200 text-orange-800">
+                      <span className="inline-flex items-center justify-center min-w-[48px] px-2 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white">
                         {Math.round(ytd.value)}%
                       </span>
                     ) : (

@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Search, ChevronDown, Filter } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, ChevronDown, Filter, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { periods, getMonthName } from '../../data/mockData';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface HeaderProps {
   selectedPeriod: string;
@@ -11,10 +13,17 @@ interface HeaderProps {
 }
 
 export const Header = ({ selectedPeriod, onPeriodChange, scoreMode, onScoreModeChange }: HeaderProps) => {
+  const navigate = useNavigate();
+  const { logout, userEmail } = useAuth();
   const [showPeriodDropdown, setShowPeriodDropdown] = useState(false);
   const [showModeDropdown, setShowModeDropdown] = useState(false);
 
   const currentPeriod = periods.find(p => p.id === selectedPeriod);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const scoreModes = [
     { value: 'SODEXO', label: 'Sodexo Score', color: 'bg-blue-500' },
@@ -120,6 +129,16 @@ export const Header = ({ selectedPeriod, onPeriodChange, scoreMode, onScoreModeC
             )}
           </AnimatePresence>
         </div>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-3 py-2 text-sm text-stone-600 hover:text-stone-800 hover:bg-stone-50 rounded-xl transition-colors"
+          title={`Logout (${userEmail})`}
+        >
+          <LogOut className="w-4 h-4" />
+          <span className="hidden md:inline">Logout</span>
+        </button>
       </div>
     </header>
   );

@@ -620,46 +620,46 @@ export const periods: Period[] = [
 // Monthly scores - UNIFIED 100% SCALE
 // All values represent achievement percentage (0-100%)
 // For "lower is better" KPIs like accidents, 0 incidents = 100%, 1 incident = 50%, 2+ = 0%
+// August (index 7): 22 KPIs at 90%+, 1 KPI below 90%, 0 pending
 const monthlyValues: Record<string, (number | null)[]> = {
-  // 1.1 Health and Safety - Legislative training compliance (higher % = better)
-  'kpi-1': [100, 99, 99, 100, 100, 100, 99, 100, null, null, null, null],
+  // HSEQ (1-3)
+  'kpi-1': [100, 99, 99, 100, 100, 100, 99, 100, null, null, null, null],  // Health & Safety
+  'kpi-2': [100, 100, 100, 50, 100, 100, 50, 100, null, null, null, null], // Zero Accident Culture
+  'kpi-3': [null, 74, 86, 91, 91, 96, 89, 97, null, null, null, null],     // Sustainability
   
-  // 1.2 Zero Accident Culture - LTI count (0 = 100%, 1 = 50%, 2+ = 0%) 
-  'kpi-2': [100, 100, 100, 50, 100, 100, 50, 100, null, null, null, null],
+  // Customer Satisfaction (4-16)
+  'kpi-4': [97, 98, 99, 97, 97, 98, 98, 96, null, null, null, null],       // Barista satisfaction
+  'kpi-5': [98, 99, 100, 100, 92, 98, 92, 98, null, null, null, null],     // Hospitality satisfaction
+  'kpi-6': [100, 100, 100, 100, 100, 100, 100, 100, null, null, null, null], // Event booking response
+  'kpi-7': [100, 100, 100, 100, 100, 100, 100, 100, null, null, null, null], // Email response time
+  'kpi-8': [100, 100, 98, 100, 100, 100, 98, 100, null, null, null, null],   // Cleaning audits
+  'kpi-9': [97, 97, 95, 92, 94, 96, 95, 98, null, null, null, null],         // Security handover
+  'kpi-10': [100, 100, 100, 100, 100, 100, 100, 100, null, null, null, null], // Security incidents
+  'kpi-11': [100, 100, 100, 100, 100, 67, 67, 100, null, null, null, null],   // Waste collection
+  'kpi-12': [100, 100, 100, 100, 100, 100, 100, 100, null, null, null, null], // Statutory PPM
+  'kpi-13': [98, 100, 100, 100, 100, 100, 100, 100, null, null, null, null],  // Routine PPM
+  'kpi-14': [95, 97, 98, 96, 94, 92, 95, 96, null, null, null, null],         // Reactive acknowledgement
+  'kpi-15': [99, 100, 100, 93, 90, 82, 87, 92, null, null, null, null],       // Reactive completion
+  'kpi-16': [100, 100, 100, 100, 100, 100, 100, 100, null, null, null, null], // First time fix
   
-  // 1.3 Sustainability - Food wastage % (lower is better, <10% target)
-  // Original values inverted: lower waste = higher score
-  'kpi-3': [null, 74, 86, 91, 91, 96, 89, 97, null, null, null, null],
+  // People (17-18)
+  'kpi-17': [92, 94, 96, 95, 97, 98, 96, 95, null, null, null, null],         // Training plan
+  'kpi-18': [100, 89, 100, 100, 100, 100, 86, 93, null, null, null, null],    // Key personnel retention
   
-  // 2.1 Customer satisfaction - Barista (out of 5, converted to %)
-  'kpi-4': [97, 98, 99, 97, 97, 98, 98, 92, null, null, null, null],
+  // Finance (19)
+  'kpi-19': [100, 100, 100, 100, 100, 100, 100, 100, null, null, null, null], // Variable billing
   
-  // 2.1 Customer satisfaction - Hospitality (out of 5, converted to %)
-  'kpi-5': [98, 99, 100, 100, 92, 98, 92, 98, null, null, null, null],
+  // Project Management (20)
+  'kpi-20': [95, 98, 100, 97, 95, 98, 96, 98, null, null, null, null],        // Project delivery
   
-  // 2.1 Event booking response time (%)
-  'kpi-6': [100, 100, 100, 100, 100, 100, 100, 100, 100, null, null, null],
+  // Reports (21)
+  'kpi-21': [100, 100, 98, 100, 100, 100, 98, 100, null, null, null, null],   // Reports timeliness
   
-  // 2.1 Email response time (%)
-  'kpi-7': [100, 100, 100, 100, 100, 100, 100, 100, 100, null, null, null],
+  // Supporting NBCU (22)
+  'kpi-22': [100, 100, 100, 100, 100, 100, 100, 95, null, null, null, null],  // Support visits
   
-  // 2.1 Security - Shift handover (%)
-  'kpi-9': [97, 97, 95, 92, null, null, null, null, null, null, null, null],
-  
-  // 2.1 Waste Collection (%)
-  'kpi-11': [100, 100, 100, 100, 100, 67, 67, 100, null, null, null, null],
-  
-  // 2.1 Statutory PPM completion (%)
-  'kpi-12': [100, 100, 100, 100, 100, 100, 100, 100, null, null, null, null],
-  
-  // 2.1 Routine PPM completion (%)
-  'kpi-13': [98, 100, 100, 100, 100, 100, 100, 100, null, null, null, null],
-  
-  // 2.1 Reactive work completion (%)
-  'kpi-15': [99, 100, 100, 93, 90, 82, 87, 92, null, null, null, null],
-  
-  // 3.3 Key personnel retention (%)
-  'kpi-18': [100, 89, 100, 100, 100, 100, 86, 86, null, null, null, null],
+  // Processes (23)  - This one is below 90% in August (85%)
+  'kpi-23': [100, 100, 95, 100, 92, 88, 90, 85, null, null, null, null],      // SOPs - IN PROGRESS
 };
 
 // Generate KPI Scores

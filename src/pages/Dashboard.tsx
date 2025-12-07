@@ -137,12 +137,12 @@ export const Dashboard = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-950 rounded-3xl p-8 text-white overflow-hidden relative"
+        className="bg-gradient-to-br from-[#1a0a2e] via-[#2d1b4e] to-[#1a0a2e] rounded-3xl p-8 text-white overflow-hidden relative"
       >
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-15">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-teal-400 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-400 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-violet-500 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
         </div>
 
         <div className="relative flex flex-col lg:flex-row items-center gap-8">
@@ -151,7 +151,7 @@ export const Dashboard = () => {
               score={stats.overallPercentage}
               size="xl"
               label="Overall"
-              color="#f97316"
+              color="#10b981"
               darkBackground
             />
           </div>
@@ -160,48 +160,48 @@ export const Dashboard = () => {
             <h2 className="text-3xl font-bold mb-2">
               {currentPeriod ? `${getMonthName(currentPeriod.month)} ${currentPeriod.year}` : ''} Performance
             </h2>
-            <p className="text-emerald-200 text-lg mb-6">
+            <p className="text-violet-200 text-lg mb-6">
               {stats.passed} of {stats.totalKPIs} KPIs achieved target
             </p>
             
             <div className="grid grid-cols-3 gap-6">
               <div className="text-center lg:text-left">
-                <div className="flex items-center justify-center lg:justify-start gap-2 text-teal-300 mb-1">
+                <div className="flex items-center justify-center lg:justify-start gap-2 text-emerald-400 mb-1">
                   <CheckCircle2 className="w-5 h-5" />
                   <span className="text-2xl font-bold">{stats.passed}</span>
                 </div>
-                <p className="text-sm text-emerald-300">Passed</p>
+                <p className="text-sm text-violet-300">Achieved</p>
               </div>
               <div className="text-center lg:text-left">
                 <div className="flex items-center justify-center lg:justify-start gap-2 text-amber-400 mb-1">
                   <Target className="w-5 h-5" />
                   <span className="text-2xl font-bold">{stats.failed}</span>
                 </div>
-                <p className="text-sm text-emerald-300">In Progress</p>
+                <p className="text-sm text-violet-300">In Progress</p>
               </div>
               <div className="text-center lg:text-left">
-                <div className="flex items-center justify-center lg:justify-start gap-2 text-emerald-300 mb-1">
+                <div className="flex items-center justify-center lg:justify-start gap-2 text-violet-300 mb-1">
                   <Clock className="w-5 h-5" />
                   <span className="text-2xl font-bold">{stats.pending}</span>
                 </div>
-                <p className="text-sm text-emerald-300">Pending</p>
+                <p className="text-sm text-violet-300">Pending</p>
               </div>
             </div>
           </div>
 
-          <div className="hidden xl:block flex-shrink-0 border-l border-emerald-700 pl-8">
-            <p className="text-sm text-emerald-300 mb-2">Score Display Mode</p>
+          <div className="hidden xl:block flex-shrink-0 border-l border-violet-700 pl-8">
+            <p className="text-sm text-violet-300 mb-2">Score Display Mode</p>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-blue-600" />
+                <div className="w-3 h-3 rounded-full bg-emerald-500" />
                 <span className="text-sm">Sodexo: {(stats.overallPercentage).toFixed(1)}%</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-violet-600" />
+                <div className="w-3 h-3 rounded-full bg-violet-400" />
                 <span className="text-sm">NBCU: {(stats.overallPercentage * 0.95).toFixed(1)}%</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-orange-500" />
+                <div className="w-3 h-3 rounded-full bg-purple-400" />
                 <span className="text-sm">Average: {(stats.overallPercentage * 0.975).toFixed(1)}%</span>
               </div>
             </div>

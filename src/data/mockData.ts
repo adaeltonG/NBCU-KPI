@@ -617,21 +617,49 @@ export const periods: Period[] = [
   { id: 'period-12', year: 2025, month: 12, quarter: 4, startDate: '2025-12-01', endDate: '2025-12-31', isClosed: false },
 ];
 
-// Monthly scores from Excel data
-const monthlyValues: Record<string, (string | number | null)[]> = {
-  'kpi-1': [1, 0.99, 0.99, 1, 1, 1, 0.99, 1, null, null, null, null],
-  'kpi-2': [0, 0, 0, 1, 0, 0, 1, null, null, null, null, null],
-  'kpi-3': [null, 0.2578, 0.139, 0.0863, 0.09, 0.04, 0.11, 0.03, null, null, null, null],
-  'kpi-4': [4.87, 4.92, 4.93, 4.87, 4.86, 4.9, 4.9, 4.6, null, null, null, null],
-  'kpi-5': [4.9, 4.93, 5, 5, 4.6, 4.9, 4.6, 4.9, null, null, null, null],
-  'kpi-6': [1, 1, 1, 1, 1, 1, 1, 1, 1, null, null, null],
-  'kpi-7': [1, 1, 1, 1, 1, 1, 1, 1, 1, null, null, null],
-  'kpi-9': [0.97, 0.97, 0.95, 0.92, null, null, null, null, null, null, null, null],
-  'kpi-11': [1, 1, 1, 1, 1, 0.666, 0.666, 1, null, null, null, null],
-  'kpi-12': [1, 1, 1, 1, 1, 1, 1, 1, null, null, null, null],
-  'kpi-13': [0.98, 1, 1, 1, 1, 1, 1, 1, null, null, null, null],
-  'kpi-15': [0.99, 1, 1, 0.93, 0.9, 0.82, 0.87, 0.92, null, null, null, null],
-  'kpi-18': [1, 0.89, 1, 1, 1, 1, 0.86, 0.86, null, null, null, null],
+// Monthly scores - UNIFIED 100% SCALE
+// All values represent achievement percentage (0-100%)
+// For "lower is better" KPIs like accidents, 0 incidents = 100%, 1 incident = 50%, 2+ = 0%
+const monthlyValues: Record<string, (number | null)[]> = {
+  // 1.1 Health and Safety - Legislative training compliance (higher % = better)
+  'kpi-1': [100, 99, 99, 100, 100, 100, 99, 100, null, null, null, null],
+  
+  // 1.2 Zero Accident Culture - LTI count (0 = 100%, 1 = 50%, 2+ = 0%) 
+  'kpi-2': [100, 100, 100, 50, 100, 100, 50, 100, null, null, null, null],
+  
+  // 1.3 Sustainability - Food wastage % (lower is better, <10% target)
+  // Original values inverted: lower waste = higher score
+  'kpi-3': [null, 74, 86, 91, 91, 96, 89, 97, null, null, null, null],
+  
+  // 2.1 Customer satisfaction - Barista (out of 5, converted to %)
+  'kpi-4': [97, 98, 99, 97, 97, 98, 98, 92, null, null, null, null],
+  
+  // 2.1 Customer satisfaction - Hospitality (out of 5, converted to %)
+  'kpi-5': [98, 99, 100, 100, 92, 98, 92, 98, null, null, null, null],
+  
+  // 2.1 Event booking response time (%)
+  'kpi-6': [100, 100, 100, 100, 100, 100, 100, 100, 100, null, null, null],
+  
+  // 2.1 Email response time (%)
+  'kpi-7': [100, 100, 100, 100, 100, 100, 100, 100, 100, null, null, null],
+  
+  // 2.1 Security - Shift handover (%)
+  'kpi-9': [97, 97, 95, 92, null, null, null, null, null, null, null, null],
+  
+  // 2.1 Waste Collection (%)
+  'kpi-11': [100, 100, 100, 100, 100, 67, 67, 100, null, null, null, null],
+  
+  // 2.1 Statutory PPM completion (%)
+  'kpi-12': [100, 100, 100, 100, 100, 100, 100, 100, null, null, null, null],
+  
+  // 2.1 Routine PPM completion (%)
+  'kpi-13': [98, 100, 100, 100, 100, 100, 100, 100, null, null, null, null],
+  
+  // 2.1 Reactive work completion (%)
+  'kpi-15': [99, 100, 100, 93, 90, 82, 87, 92, null, null, null, null],
+  
+  // 3.3 Key personnel retention (%)
+  'kpi-18': [100, 89, 100, 100, 100, 100, 86, 86, null, null, null, null],
 };
 
 // Generate KPI Scores
@@ -639,12 +667,11 @@ export const kpiScores: KPIScore[] = [];
 Object.entries(monthlyValues).forEach(([kpiId, values]) => {
   values.forEach((value, monthIndex) => {
     if (value !== null) {
-      const numValue = typeof value === 'number' ? value : parseFloat(value);
       kpiScores.push({
         id: `score-${kpiId}-${monthIndex + 1}`,
-        actualValue: String(value),
-        numericValue: numValue,
-        score: numValue > 1 ? numValue / 5 : numValue, // Normalize to 0-1 scale
+        actualValue: `${value}%`,
+        numericValue: value, // Now stored as 0-100 percentage
+        score: value / 100, // Normalized 0-1 scale
         status: 'APPROVED',
         kpiId,
         periodId: `period-${monthIndex + 1}`,

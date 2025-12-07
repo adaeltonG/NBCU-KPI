@@ -24,11 +24,12 @@ const StatusIcon = ({ status }: { status: 'ACHIEVED' | 'PROGRESSING' | 'PENDING'
   }
 };
 
+// Unified 100% scale: score is 0-100
 const getStatus = (score: number | undefined): 'ACHIEVED' | 'PROGRESSING' | 'PENDING' | 'DEVELOPING' => {
   if (score === undefined || score === null) return 'PENDING';
-  if (score >= 0.95 || score >= 4.5) return 'ACHIEVED';
-  if (score >= 0.85 || score >= 4) return 'DEVELOPING';
-  return 'PROGRESSING';
+  if (score >= 90) return 'ACHIEVED';      // 90%+ = Deep Emerald
+  if (score >= 80) return 'DEVELOPING';    // 80%+ = Teal
+  return 'PROGRESSING';                     // Below 80% = Amber
 };
 
 export const KPITable = ({ kpis, scores, categories, onKPIClick }: KPITableProps) => {
@@ -112,24 +113,19 @@ export const KPITable = ({ kpis, scores, categories, onKPIClick }: KPITableProps
                   </td>
                   {months.map(month => {
                     const score = getKPIScoreForMonth(kpi.id, month);
-                    const displayValue = score?.actualValue;
                     const numValue = score?.numericValue;
                     const cellStatus = getStatus(numValue);
 
                     return (
                       <td key={month} className="px-3 py-3 text-center">
-                        {displayValue !== undefined ? (
+                        {numValue !== undefined ? (
                           <span className={`inline-flex items-center justify-center min-w-[48px] px-2 py-1 rounded-lg text-xs font-medium ${
                             cellStatus === 'ACHIEVED' ? 'bg-emerald-100 text-emerald-700' :
                             cellStatus === 'DEVELOPING' ? 'bg-teal-100 text-teal-700' :
                             cellStatus === 'PROGRESSING' ? 'bg-amber-100 text-amber-700' :
                             'bg-stone-100 text-stone-500'
                           }`}>
-                            {numValue !== undefined && numValue <= 5 
-                              ? numValue.toFixed(2) 
-                              : numValue !== undefined 
-                                ? `${Math.round(numValue * 100)}%` 
-                                : displayValue}
+                            {Math.round(numValue)}%
                           </span>
                         ) : (
                           <span className="text-stone-300">—</span>
@@ -140,7 +136,7 @@ export const KPITable = ({ kpis, scores, categories, onKPIClick }: KPITableProps
                   <td className="px-4 py-3 text-center bg-orange-50">
                     {ytd.count > 0 ? (
                       <span className="inline-flex items-center justify-center min-w-[48px] px-2 py-1 rounded-lg text-xs font-bold bg-orange-200 text-orange-800">
-                        {ytd.value <= 5 ? ytd.value.toFixed(2) : `${Math.round(ytd.value * 100)}%`}
+                        {Math.round(ytd.value)}%
                       </span>
                     ) : (
                       <span className="text-stone-300">—</span>

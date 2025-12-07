@@ -27,20 +27,20 @@ export const Dashboard = () => {
   
   const currentPeriod = periods.find(p => p.id === selectedPeriod);
 
-  // Calculate overall stats
+  // Calculate overall stats (unified 100% scale)
   const stats = useMemo(() => {
     const periodScores = kpiScores.filter(s => s.periodId === selectedPeriod);
     const totalKPIs = kpis.length;
     const scoredKPIs = periodScores.length;
     
-    // Calculate pass/fail based on thresholds
+    // Calculate achieved/in-progress based on 90% threshold
     let passed = 0;
     let failed = 0;
     
     periodScores.forEach(score => {
       if (score.numericValue !== undefined) {
-        // Simple pass/fail logic - can be enhanced
-        if (score.numericValue >= 0.9 || score.numericValue >= 4) {
+        // 90%+ is achieved, below is in progress
+        if (score.numericValue >= 90) {
           passed++;
         } else {
           failed++;
@@ -49,24 +49,22 @@ export const Dashboard = () => {
     });
 
     const pending = totalKPIs - scoredKPIs;
-    const avgScore = scoredKPIs > 0
+    // Average is now directly in 0-100 scale
+    const overallPercentage = scoredKPIs > 0
       ? periodScores.reduce((sum, s) => sum + (s.numericValue || 0), 0) / scoredKPIs
       : 0;
-    
-    // Normalize score to percentage
-    const overallPercentage = avgScore <= 1 ? avgScore * 100 : (avgScore / 5) * 100;
 
     return {
       totalKPIs,
       passed,
       failed,
       pending,
-      overallScore: avgScore,
+      overallScore: overallPercentage / 100,
       overallPercentage: Math.min(overallPercentage, 100),
     };
   }, [selectedPeriod]);
 
-  // Calculate category scores
+  // Calculate category scores (unified 100% scale)
   const categoryScores = useMemo(() => {
     const scores: Record<string, number> = {};
     
@@ -77,8 +75,9 @@ export const Dashboard = () => {
       );
       
       if (catScores.length > 0) {
+        // Values are already in 0-100 scale
         const avg = catScores.reduce((sum, s) => sum + (s.numericValue || 0), 0) / catScores.length;
-        scores[cat.id] = avg <= 1 ? avg * 100 : (avg / 5) * 100;
+        scores[cat.id] = avg;
       } else {
         scores[cat.id] = 0;
       }
@@ -87,15 +86,13 @@ export const Dashboard = () => {
     return scores;
   }, []);
 
-  // Generate trend data
+  // Generate trend data (unified 100% scale)
   const trendData = useMemo(() => {
     return periods.slice(0, 8).map(period => {
       const periodKpiScores = kpiScores.filter(s => s.periodId === period.id);
+      // Values are now 0-100, convert to 0-1 for chart
       const avgSodexo = periodKpiScores.length > 0
-        ? periodKpiScores.reduce((sum, s) => {
-            const val = s.numericValue || 0;
-            return sum + (val <= 1 ? val : val / 5);
-          }, 0) / periodKpiScores.length
+        ? periodKpiScores.reduce((sum, s) => sum + ((s.numericValue || 0) / 100), 0) / periodKpiScores.length
         : 0;
       
       return {

@@ -35,7 +35,7 @@ export const MonthlyView = () => {
     }
   };
 
-  // Calculate monthly stats
+  // Calculate monthly stats (unified 100% scale)
   const monthlyStats = useMemo(() => {
     const periodScores = kpiScores.filter(s => s.periodId === selectedPeriod);
     let passed = 0, failed = 0;
@@ -43,17 +43,16 @@ export const MonthlyView = () => {
     periodScores.forEach(s => {
       const val = s.numericValue;
       if (val !== undefined) {
-        if (val >= 0.9 || val >= 4) passed++;
+        // 90%+ is achieved
+        if (val >= 90) passed++;
         else failed++;
       }
     });
 
     const pending = kpis.length - periodScores.length;
+    // Values are already 0-100 scale
     const avgScore = periodScores.length > 0
-      ? periodScores.reduce((sum, s) => {
-          const val = s.numericValue || 0;
-          return sum + (val <= 1 ? val : val / 5);
-        }, 0) / periodScores.length
+      ? periodScores.reduce((sum, s) => sum + (s.numericValue || 0), 0) / periodScores.length
       : 0;
 
     // Compare with previous month
@@ -62,18 +61,17 @@ export const MonthlyView = () => {
     if (prevPeriodId) {
       const prevScores = kpiScores.filter(s => s.periodId === prevPeriodId);
       const prevAvg = prevScores.length > 0
-        ? prevScores.reduce((sum, s) => {
-            const val = s.numericValue || 0;
-            return sum + (val <= 1 ? val : val / 5);
-          }, 0) / prevScores.length
+        ? prevScores.reduce((sum, s) => sum + (s.numericValue || 0), 0) / prevScores.length
         : 0;
-      trend = ((avgScore - prevAvg) / prevAvg) * 100;
+      if (prevAvg > 0) {
+        trend = ((avgScore - prevAvg) / prevAvg) * 100;
+      }
     }
 
-    return { passed, failed, pending, avgScore: avgScore * 100, trend };
+    return { passed, failed, pending, avgScore, trend };
   }, [selectedPeriod, currentIndex]);
 
-  // Category breakdown
+  // Category breakdown (unified 100% scale)
   const categoryStats = useMemo(() => {
     return categories.map(cat => {
       const catKPIs = kpis.filter(k => k.categoryId === cat.id);
@@ -85,16 +83,15 @@ export const MonthlyView = () => {
       catScores.forEach(s => {
         const val = s.numericValue;
         if (val !== undefined) {
-          if (val >= 0.9 || val >= 4) passed++;
+          // 90%+ is achieved
+          if (val >= 90) passed++;
           else failed++;
         }
       });
 
+      // Values are already 0-100 scale
       const avgScore = catScores.length > 0
-        ? catScores.reduce((sum, s) => {
-            const val = s.numericValue || 0;
-            return sum + (val <= 1 ? val : val / 5);
-          }, 0) / catScores.length
+        ? catScores.reduce((sum, s) => sum + (s.numericValue || 0), 0) / catScores.length
         : 0;
 
       return {
@@ -103,7 +100,7 @@ export const MonthlyView = () => {
         scored: catScores.length,
         passed,
         failed,
-        avgScore: avgScore * 100,
+        avgScore,
       };
     });
   }, [selectedPeriod]);
@@ -132,8 +129,9 @@ export const MonthlyView = () => {
         category,
         score: score?.numericValue,
         actualValue: score?.actualValue,
+        // Unified 100% scale: 90%+ is pass
         status: !score?.numericValue ? 'pending' : 
-                (score.numericValue >= 0.9 || score.numericValue >= 4) ? 'pass' : 'fail',
+                (score.numericValue >= 90) ? 'pass' : 'improving',
         trend,
       };
     });
@@ -309,15 +307,13 @@ export const MonthlyView = () => {
               </div>
               <div className="flex items-center gap-4">
                 <TrendIcon trend={item.trend} />
-                {item.actualValue ? (
+                {item.score !== undefined ? (
                   <span className={`px-3 py-1 rounded-lg text-sm font-medium ${
                     item.status === 'pass' ? 'bg-emerald-100 text-emerald-700' :
-                    item.status === 'fail' ? 'bg-amber-100 text-amber-700' :
+                    item.status === 'improving' ? 'bg-amber-100 text-amber-700' :
                     'bg-stone-100 text-stone-500'
                   }`}>
-                    {item.score !== undefined && item.score <= 1 
-                      ? `${(item.score * 100).toFixed(0)}%`
-                      : item.actualValue}
+                    {Math.round(item.score)}%
                   </span>
                 ) : (
                   <span className="px-3 py-1 rounded-lg text-sm font-medium bg-stone-100 text-stone-400">
@@ -325,7 +321,7 @@ export const MonthlyView = () => {
                   </span>
                 )}
                 {item.status === 'pass' && <CheckCircle2 className="w-5 h-5 text-emerald-500" />}
-                {item.status === 'fail' && <Target className="w-5 h-5 text-amber-500" />}
+                {item.status === 'improving' && <TrendingUp className="w-5 h-5 text-amber-500" />}
                 {item.status === 'pending' && <Clock className="w-5 h-5 text-stone-300" />}
                 <ChevronRight className="w-4 h-4 text-stone-300" />
               </div>
